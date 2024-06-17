@@ -3,18 +3,32 @@
     <div class = "chapter container ">
       <div class = "chapter-description row">
         <h2>Postgresql</h2>
-        <p>Finding a way to use all postgresql functions.</p>
+        <p>How to use the Postgresql service of Vercel.</p>
       </div>
-
-
 
       <div class = "example row">
         <div>
-          <h3><b>Example 01: </b>Attempting a simple request.</h3>
-          <p>Let's see.</p>
+          <h3><b>Example 01: </b>Text request</h3>
+          <p>Receiving a simple text from the server.</p>
+          <button type = "button" class = "button-A button-medium" onclick = "ex01fetch()">Fetch</button>
+          <button type = "button" class = "button-A button-medium" onclick = "ex01reset()">Reset</button>
+          <p>Result: <b><span id ="ch-B-ex01"></span></b></p>
         </div>
-      </div>
 
+        <script>
+          function ex01fetch(){
+            fetch('/B01-postgresql/fetchtext')
+            .then(res => res.text())
+            .then(data => {
+              document.querySelector('#ch-B-ex01').textContent = data;
+            });
+          };
+
+          function ex01reset(){
+            document.querySelector('#ch-B-ex01').textContent = "";
+          };
+        </script>
+      </div>
     </div>
 
 <%- include('00b_footer.ejs') %>
