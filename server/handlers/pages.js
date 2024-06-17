@@ -1,11 +1,11 @@
 exports.home = (req, res) => {
-  res.render('home.ejs', null);
+  res.render('01_home.ejs', null);
 };
 
-exports.subpage = (req, res) => {
-  res.render('subpage.ejs', null);
+exports.A01 = (req, res) => {
+  res.render('A01_common-components.ejs', null);
 };
 
-exports.simpleapi = (req, res) => {
-  res.send("Simple text as response");
+exports.B01 = (req, res) => {
+  res.render('B01_postgresql.ejs', null);
 };

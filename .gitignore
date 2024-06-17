@@ -1,4 +1,7 @@
 node_modules
 development.env
 .vercel
+.misc
 notes.txt
+start_browsersync.lnk
+start_server.lnk

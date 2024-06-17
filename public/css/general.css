@@ -1,0 +1,164 @@
+/* https://coolors.co/56642a-849531-92a332-96a937-a8bb3a */
+
+:root{
+  /* universal colors */
+  --color-bg-01: #EDDFBF;
+  --color-item-01: #56642A;
+  --color-item-02: #849531;
+  --color-item-02-light: #96A937;
+  --color-item-03: #92A332;
+  --color-item-03-light: #A8BB3A;
+}
+
+
+/* general elements */
+
+html, body {
+  background: var(--color-bg-01);
+  font-family: "Nunito", sans-serif;
+}
+a {
+  color: var(--color-item-03);
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover{
+  color: var(--color-item-01);
+}
+code {
+  color: var(--color-item-02);
+  font-weight: bold;
+}
+
+
+
+
+/* specific blocks */
+
+header nav {
+  background-image: linear-gradient(var(--color-item-01), var(--color-item-02));
+  box-shadow: 0 0 5px 5px var(--color-item-02);
+  padding: 30px;
+  text-align: right;
+}
+header nav a {
+  color: white;
+}
+header nav a:hover {
+  color: white;
+}
+header nav img {
+  width: 200px;
+}
+header nav h3 {
+  display: inline-block;
+  font-weight: 200;
+  letter-spacing: 3.5px;
+  font-size: 1.2em;
+}
+.welcome-image {
+  max-height: 300px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+
+
+
+
+
+
+/* specific elements */
+
+button.button-A {
+  background-image: linear-gradient(var(--color-item-03), var(--color-item-02));
+  border: none;
+  color: white;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+}
+button.button-A:hover{
+  background-image: linear-gradient(var(--color-item-03-light), var(--color-item-02-light));
+}
+
+.button-A.button-small {
+  display: inline-block;
+  font-size: 0.9em;
+  padding: 6px 12px;
+}
+
+.button-A.button-medium {
+  display: inline-block;
+  font-size: 1.1em;
+  padding: 10px 20px;
+}
+.button-A.button-wide {
+  display: block;
+  font-size: 1.1em;
+  padding: 10px 20px;
+  width: 100%;
+}
+
+
+
+.form-A {
+  
+}
+
+.form-A label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.form-A input, .form-A textarea {
+  border: 2px solid var(--color-item-02);
+  border-radius: 10px;
+  display: block;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.form-A input:focus-visible, .form-A textarea:focus-visible {
+  box-shadow: 0 0 5px 1px var(--color-item-02-light);
+  outline: none;
+
+}
+
+
+
+/* general blocks */
+
+h2 {
+  position: relative;
+}
+h2:after {
+  background-image: linear-gradient(to right, var(--color-item-02), var(--color-item-03-light));
+  bottom: 0;
+  content: "";
+  height: 3px;
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+.home-links ul {
+  list-style: none;
+}
+
+.chapter-description {
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.chapter-description h2 {
+  font-size: 2.5em;
+}
+.chapter-description p {
+  font-size: 0.8em;
+  padding-left: 60px;
+  padding-right: 20px;
+}
+
+.example {
+  margin-bottom: 30px;
+}

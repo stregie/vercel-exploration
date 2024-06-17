@@ -4,7 +4,7 @@ const router = express.Router();
 const pages = require('../handlers/pages.js');
 
 router.get('/', pages.home);
-router.get('/subpage', pages.subpage);
-router.get('/simpleapi', pages.simpleapi);
+router.get('/A01-common-components', pages.A01);
+router.get('/B01-postgresql', pages.B01);
 
 module.exports = router;
