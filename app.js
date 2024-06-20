@@ -2,15 +2,18 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import ejs from 'ejs';
+import { fileURLToPath } from 'url';
 import routes from './server/routes/routes.js';
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(import.meta.dirname);
+console.log(path.join(__dirname, 'server', 'views'));
 
 app.engine('ejs', ejs.__express);
 app.set('view engine', 'ejs');
-console.log(import.meta.dirname);
-console.log(path.join(import.meta.dirname, 'server', 'views'));
-app.set('views', path.join(import.meta.dirname, 'server', 'views'));
+app.set('views', path.join(__dirname, 'server', 'views'));
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 app.use(express.json());
 app.use('/', routes);
