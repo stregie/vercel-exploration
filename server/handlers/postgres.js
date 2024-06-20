@@ -1,10 +1,10 @@
-const { sql } = require('@vercel/postgres');
+import { sql } from '@vercel/postgres';
 
-exports.fetchText = (req, res) => {
+export const fetchText = (req, res) => {
   res.send("Response from the server");
 };
 
-exports.selectAll = async (req, res) => {
+export const selectAll = async (req, res) => {
   try {
     const data = await sql`SELECT * FROM wood_properties;`;
     res.json(data.rows);
@@ -16,7 +16,7 @@ exports.selectAll = async (req, res) => {
   }
 };
 
-exports.insertData = async (req, res) => {
+export const insertData = async (req, res) => {
   let data = req.body;
   try {
     await sql`INSERT INTO wood_properties (wood_name, wood_type, color, texture, hardness) VALUES (${data.woodName}, ${data.woodType}, ${data.color}, ${data.texture}, ${data.hardness});`; // Vercel sanitizes all queries sent to your Vercel Postgres database before executing them
@@ -27,13 +27,13 @@ exports.insertData = async (req, res) => {
   }
 };
 
-exports.deleteByName = async (req, res) => {
+export const deleteByName = async (req, res) => {
   let entryName = req.body.woodName;
   try {
     await sql`DELETE FROM wood_properties WHERE wood_name = ${entryName}`;
     res.send(`${entryName} deleted.`);
   } catch (error) {
     console.log(error);
-    return response.status(500).send("Soemthing has happened");
+    return response.status(500).send("Something has happened");
   }
 };
