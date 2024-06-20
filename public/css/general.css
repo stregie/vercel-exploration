@@ -162,3 +162,31 @@ h2:after {
 .example {
   margin-bottom: 30px;
 }
+
+.table-A-wrapper {
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.table-A {
+  width: 100%;
+}
+.table-A thead {
+  background-image: linear-gradient(var(--color-item-02), var(--color-item-01));
+  color: white;
+}
+.table-A thead th{
+  padding: 5px 10px;
+}
+.table-A tbody {
+  font-size: 0.9em;
+}
+.table-A tbody tr:nth-child(odd) {
+  background: #FFFFFFA0;
+}
+.table-A tbody tr:nth-child(even) {
+  background: #FFFFFF40;
+}
+.table-A tbody td {
+  padding: 5px 10px;
+}
