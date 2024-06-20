@@ -8,6 +8,8 @@ const app = express();
 
 app.engine('ejs', ejs.__express);
 app.set('view engine', 'ejs');
+console.log(import.meta.dirname);
+console.log(path.join(import.meta.dirname, 'server', 'views'));
 app.set('views', path.join(import.meta.dirname, 'server', 'views'));
 app.use(express.static(path.join(import.meta.dirname, 'public')));
 app.use(express.json());
