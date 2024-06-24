@@ -50,68 +50,29 @@ export const uploadLocalFile = async (req, res) => {
 };
 
 export const uploadFile = async (req, res) => {
-  console.log("uploadFile called");
   const form = formidable({});
-  
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      res.status(err.statusCode).send("Parsing was unsuccessful. " + err.code);
+  let uploadedFiles = [];
+
+  try {
+    const [fields, files] = await form.parse(req);
+
+    for (let i = 0; i < files.file.length; i++){
+      let fileName = files.file[i].originalFilename;
+      let tempPath = files.file[i].filepath;
+      let newPath  = `Blob-test/${fileName}`;
+      
+      const data = await readFile(tempPath);
+      const metadata = await put(`Blob-test/${fileName}`, data, { 
+        access: 'public',
+        multipart: true
+      });
+
+      uploadedFiles.push(metadata.pathname);
     }
-    console.log("form.parse called");
-  });
 
-  form.on('file', (formname, file) => {
-    console.log('form.on file.filepath', file.filepath);
-    console.log('form.on file.originalFilename', file.originalFilename);
-    // try {
-    //   const blob = await put(file.originalFilename, file, {
-    //     access: 'public'
-    //   });
-    //   console.log("blob response", blob);
-    // } catch (error) {
-    //   console.log("blob error", error);
-    // }
-  });
-
-  form.once('end', () => {
-    console.log("The End");
-    res.send("Files received");
-  });
+    res.send(uploadedFiles.toString());    
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
 };
-
-//     if (err) console.log('form.parse err', err);
-//     // console.log('form.parse files', files);
-//     // console.log('form.parse files fired');
-//   });
-// 
-//   form.on('file', (formname, file) => {
-//     // console.log('form.on file.filepath', file.filepath);
-//     // console.log('form.on file.originalFilename', file.originalFilename);
-// 
-//     let awsKey = awsFolder + file.originalFilename;
-// 
-//     fs.readFile(file.filepath, (err, data) => {
-//       if (err) console.log('readFile err', err);
-//       // console.log('readFile data', data);
-// 
-//       let awsParams = {
-//         Bucket: process.env.CYCLIC_BUCKET_NAME,
-//         Key: awsKey,
-//         Body: data
-//       };
-// 
-//       s3.putObject(awsParams, (err, data) => {
-//         if(err) {
-//           console.log(err);
-//           res.status(err.statusCode).send("Upload was not successful: " + err.code);
-//         } else {
-//           console.log(`S3: ${awsKey} uploaded successfully`);
-//         }
-//       });
-//     });
-//   });
-// 
-//   form.once('end', () => {
-//     // console.log('form.once end');
-//     res.send(`Files uploaded successfully.`);
-//   });

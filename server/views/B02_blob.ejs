@@ -26,8 +26,8 @@
             ex01fetch();
             // document.querySelector('#ch-B02-table').classList.add("d-none");
             document.querySelector('#ch-B02-ex01').classList.add("d-none");
-            // document.querySelector('#ch-B02-ex02').classList.add("d-none");
-            // document.querySelector('#ch-B02-ex03').classList.add("d-none");
+            document.querySelector('#ch-B02-ex02').classList.add("d-none");
+            document.querySelector('#ch-B02-ex03').classList.add("d-none");
             // document.querySelector('#ch-B02-ex04').classList.add("d-none");
           });
         </script>
@@ -36,7 +36,7 @@
       <div id = "ch-B02-ex01" class = "example row">
         <div>
           <h3><b>Example 01:</b> Get blob list</h3>
-          <p>Description.</p>
+          <p>Vercel provides the <code>const { blobs } = await list();</code>. This returns the metadata of all files in an array.</p>
           <button type = "button" class = "button-A button-medium" onclick = "ex01fetch()">Fetch</button>
           <button type = "button" class = "button-A button-medium" onclick = "ex01reset()">Reset</button>
           <p>Result: <b><span id ="ch-B02-ex01-res"></span></b></p>
@@ -55,7 +55,7 @@
         </script>
       </div>
 
-      <div id = "ch-B03-ex02" class = "example row">
+      <div id = "ch-B02-ex02" class = "example row">
         <div>
           <h3><b>Example 02:</b> Server upload - local file</h3>
           <p>Read a file that's already hosted on the Express server with <code>fs.readFile</code> and upload it to Vercel Blob with the <code>put(path, body, options)</code> method. With the <code>multipart: true</code> option, the upload of large files should be more stable.</p>
@@ -74,7 +74,7 @@
 
           <button type = "button" class = "button-A button-medium" onclick = "ex02upload()">Upload</button>
           <p>Server response:</p>
-          <pre id = "ch-B03-ex02-result"></pre>
+          <pre id = "ch-B02-ex02-result"></pre>
         </div>
 
         <script>
@@ -87,9 +87,9 @@
               });
               const result = await response.json();
               alert(`${result.pathname} uploaded`);
-              document.querySelector('#ch-B03-ex02-result').textContent = JSON.stringify(result, null, 2);
+              document.querySelector('#ch-B02-ex02-result').textContent = JSON.stringify(result, null, 2);
             } catch (error) {
-              document.querySelector('#ch-B03-ex02-result').textContent = error;
+              document.querySelector('#ch-B02-ex02-result').textContent = error;
             } finally {
               ex01fetch();
             }
@@ -99,7 +99,7 @@
 
 
 
-      <div id = "ch-B03-ex04" class = "example row">
+      <div id = "ch-B02-ex03" class = "example row">
         <div>
           <h3><b>Example 03:</b> Delete file</h3>
           <p>Deleting a file requires its url (which is contained in the file's metadata). To check if a the URL is valid and the file exists, the <code>head(url)</code> method is used. If it's invalid, it throws the following error: <b>BlobNotFoundError: Vercel Blob: The requested blob does not exist</b> and the <code>catch(error)</code> block is executed. If the file exists, it is deleted with the <code>del(url)</code> method.</p>
@@ -109,7 +109,7 @@
 
 
 
-      <div id = "ch-B03-ex04" class = "example row">
+      <div id = "ch-B02-ex04" class = "example row">
         <div>
           <h3><b>Example 04:</b> Server upload - from browser</h3>
           <p>Description.</p>
@@ -117,30 +117,31 @@
 
         <div>
           <button type = "button" class = "button-A button-medium" onclick = "ex04upload()">Upload</button>
-          <input id = "ch-B03-ex04-input" type = "file" multiple = "true">
-          <p>Server response: <span id = "ch-B03-ex04-result"></span></p>
+          <input id = "ch-B02-ex04-input" type = "file" multiple = "true">
+          <p>Server response: <span id = "ch-B02-ex04-result"></span></p>
         </div>
 
         <script>
           async function ex04upload(){
             console.log("ex04upload starts");
-            let fileInputFiles = document.querySelector('#ch-B03-ex04-input').files;
+            let fileInputFiles = document.querySelector('#ch-B02-ex04-input').files;
             let formData = new FormData();
             for (let i = 0; i < fileInputFiles.length; i++) {
               formData.append('file', fileInputFiles[i]);          
             }
 
             try {
-              console.log(formData);
               const response = await fetch('/B02-blob/upload-file', {
                 method: "PUT",
-                body: formData
+                body: formData,
               });
               const result = await response.text();
-              document.querySelector('#ch-B03-ex04-result').textContent = result;
+              document.querySelector('#ch-B02-ex04-result').textContent = result;
             } catch (error) {          
-              document.querySelector('#ch-B03-ex04-result').textContent = error;
-            } 
+              document.querySelector('#ch-B02-ex04-result').textContent = error;
+            } finally {
+              ex01fetch();
+            }
           }
         </script>
       </div>
