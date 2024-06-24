@@ -1,0 +1,4 @@
+Router:
+
+Description: A router is a versatile tool used for hollowing out an area in wood, typically for edge profiles, grooves, and decorative cuts.
+Usage: Select and install the appropriate bit for the task. Adjust the depth of the cut and secure the wood piece. Move the router steadily along the wood, either freehand or with a guide, to create the desired cut.

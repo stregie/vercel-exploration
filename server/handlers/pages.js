@@ -9,3 +9,7 @@ export const A01 = (req, res) => {
 export const B01 = (req, res) => {
   res.render('B01_postgresql.ejs', null);
 };
+
+export const B02 = (req, res) => {
+  res.render('B02_blob.ejs', null);
+};

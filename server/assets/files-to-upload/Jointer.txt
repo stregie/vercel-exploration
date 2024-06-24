@@ -1,0 +1,4 @@
+Jointer:
+
+Description: A jointer is a machine used to create flat surfaces along the edges of wood boards.
+Usage: Adjust the depth of cut and ensure the infeed and outfeed tables are level. Feed the board through the machine with even pressure, keeping it flat against the fence and table. Use push blocks for better control and safety.

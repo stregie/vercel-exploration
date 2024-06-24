@@ -1,0 +1,4 @@
+Table Saw:
+
+Description: A table saw is a powerful tool with a circular saw blade mounted on an arbor, used for making straight cuts in wood.
+Usage: Set the blade height and angle according to the desired cut. Use a push stick to guide the wood through the blade while keeping your hands clear. Ensure the wood is pressed firmly against the fence to maintain a straight cut.

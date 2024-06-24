@@ -1,0 +1,4 @@
+Chisel:
+
+Description: A chisel is a hand tool with a sharp cutting edge used for carving or cutting wood.
+Usage: Hold the chisel with one hand at the handle and guide it with the other hand near the blade. Position the bevel side down to remove large amounts of wood or bevel side up for finer, controlled cuts. Strike the handle with a mallet to drive the chisel into the wood.

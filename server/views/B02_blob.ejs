@@ -1,0 +1,175 @@
+<%# <html> %>
+<%- include('00a_header.ejs') %>
+    <div class = "chapter container ">
+      <div class = "chapter-description row">
+        <h2>Blob</h2>
+        <p>Tasks: Upload file, download file, get filelist</p>
+      </div>
+
+      <div id = "ch-B02-table" class = "table-A-wrapper">
+        <table class = "table-A">
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Size</th>
+              <th>Download</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id = "ch-B02-tbody">
+            
+          </tbody>
+        </table>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", (event) => {
+            ex01fetch();
+            // document.querySelector('#ch-B02-table').classList.add("d-none");
+            document.querySelector('#ch-B02-ex01').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex02').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex03').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex04').classList.add("d-none");
+          });
+        </script>
+      </div>
+
+      <div id = "ch-B02-ex01" class = "example row">
+        <div>
+          <h3><b>Example 01:</b> Get blob list</h3>
+          <p>Description.</p>
+          <button type = "button" class = "button-A button-medium" onclick = "ex01fetch()">Fetch</button>
+          <button type = "button" class = "button-A button-medium" onclick = "ex01reset()">Reset</button>
+          <p>Result: <b><span id ="ch-B02-ex01-res"></span></b></p>
+        </div>
+
+        <script>
+          async function ex01fetch(){
+            try {
+              const fileListResponse = await fetch(`/B02-blob/file-list`);
+              const fileList = await fileListResponse.json();
+              fillTable(fileList);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        </script>
+      </div>
+
+      <div id = "ch-B03-ex02" class = "example row">
+        <div>
+          <h3><b>Example 02:</b> Server upload - local file</h3>
+          <p>Read a file that's already hosted on the Express server with <code>fs.readFile</code> and upload it to Vercel Blob with the <code>put(path, body, options)</code> method. With the <code>multipart: true</code> option, the upload of large files should be more stable.</p>
+          <p>For Vercel blob, the path should not start with a "/" symbol. The correct format is: <code>Blob-test/Jointer.jpg</code> </p>
+          
+          <select id = "ch-b03-ex02-select">
+            <option value = "Chisel.txt">Chisel.txt</option>
+            <option value = "jointer.jpg">jointer.jpg</option>
+            <option value = "Jointer.txt">Jointer.txt</option>
+            <option value = "Random orbital sander.txt">Random orbital sander.txt</option>
+            <option value = "Router.txt">Router.txt</option>
+            <option value = "Table saw.txt">Table saw.txt</option>
+            <option value = "woodworking tools pptx.zip">woodworking tools pptx.zip (7 MB)</option>
+            <option value = "Minimal portfolio template.psd">Minimal portfolio template.psd (20MB)</option>
+          </select>
+
+          <button type = "button" class = "button-A button-medium" onclick = "ex02upload()">Upload</button>
+          <p>Server response:</p>
+          <pre id = "ch-B03-ex02-result"></pre>
+        </div>
+
+        <script>
+          async function ex02upload(){
+            const fileName = document.querySelector('#ch-b03-ex02-select').value;
+            try {
+              const response = await fetch(`/B02-blob/upload-local-file?filename=${fileName}`, {
+                method: "PUT",
+                body: "dummy"
+              });
+              const result = await response.json();
+              alert(`${result.pathname} uploaded`);
+              document.querySelector('#ch-B03-ex02-result').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+              document.querySelector('#ch-B03-ex02-result').textContent = error;
+            } finally {
+              ex01fetch();
+            }
+          }
+        </script>
+      </div>
+
+
+
+      <div id = "ch-B03-ex04" class = "example row">
+        <div>
+          <h3><b>Example 03:</b> Delete file</h3>
+          <p>Deleting a file requires its url (which is contained in the file's metadata). To check if a the URL is valid and the file exists, the <code>head(url)</code> method is used. If it's invalid, it throws the following error: <b>BlobNotFoundError: Vercel Blob: The requested blob does not exist</b> and the <code>catch(error)</code> block is executed. If the file exists, it is deleted with the <code>del(url)</code> method.</p>
+          <p>Although <code>error.name</code> should return <b>"BlobNotFoundError"</b>, it only returns <b>Error</b>. Therefore, instead of it, the <code>error.message</code> part is used to identify the error.</p> 
+        </div>
+      </div>
+
+
+
+      <div id = "ch-B03-ex04" class = "example row">
+        <div>
+          <h3><b>Example 04:</b> Server upload - from browser</h3>
+          <p>Description.</p>
+        </div>
+
+        <div>
+          <button type = "button" class = "button-A button-medium" onclick = "ex04upload()">Upload</button>
+          <input id = "ch-B03-ex04-input" type = "file" multiple = "true">
+          <p>Server response: <span id = "ch-B03-ex04-result"></span></p>
+        </div>
+
+        <script>
+          async function ex04upload(){
+            console.log("ex04upload starts");
+            let fileInputFiles = document.querySelector('#ch-B03-ex04-input').files;
+            let formData = new FormData();
+            for (let i = 0; i < fileInputFiles.length; i++) {
+              formData.append('file', fileInputFiles[i]);          
+            }
+
+            try {
+              console.log(formData);
+              const response = await fetch('/B02-blob/upload-file', {
+                method: "PUT",
+                body: formData
+              });
+              const result = await response.text();
+              document.querySelector('#ch-B03-ex04-result').textContent = result;
+            } catch (error) {          
+              document.querySelector('#ch-B03-ex04-result').textContent = error;
+            } 
+          }
+        </script>
+      </div>
+
+    </div>
+
+    <script>
+      function fillTable(fileList){
+        let html = "";
+        fileList.forEach(item => {
+          html += `<tr>
+            <td>${item.pathname}</td>
+            <td>${item.size}</td>
+            <td><a href = '${item.downloadUrl}'>Download</a></td>
+            <td><button class = "button-A button-small" onclick = "deleteFile('${item.url}')">delete</button></td>
+          </tr>`;
+        });
+        document.querySelector('#ch-B02-tbody').innerHTML = html;
+      };
+
+      async function deleteFile(url){
+        const response = await fetch(`/B02-blob/delete-file/?url=${url}`, {
+          method: 'DELETE'
+        });
+        const message = await response.text();
+        alert(message);
+        ex01fetch();
+      };
+    </script>
+
+<%- include('00b_footer.ejs') %>
+<%# </html> %>

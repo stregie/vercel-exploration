@@ -6,10 +6,9 @@ import { fileURLToPath } from 'url';
 import routes from './server/routes/routes.js';
 
 const app = express();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-console.log(import.meta.dirname);
-console.log(path.join(__dirname, 'server', 'views'));
 
 app.engine('ejs', ejs.__express);
 app.set('view engine', 'ejs');
