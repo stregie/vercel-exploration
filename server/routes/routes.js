@@ -16,7 +16,9 @@ router.post('/B01-postgresql/insert-data', postgres.insertData);
 router.post('/B01-postgresql/delete-by-name', postgres.deleteByName);
 
 router.get('/B02-blob/file-list', blob.getFileList);
-router.delete('/B02-blob/delete-file/', blob.deleteFile);
+router.get('/B02-blob/metadata', blob.getMetaData);
+router.get('/B02-blob/download-file', blob.downloadFile);
+router.delete('/B02-blob/delete-file', blob.deleteFile);
 router.put('/B02-blob/upload-local-file', blob.uploadLocalFile);
 router.put('/B02-blob/upload-file', blob.uploadFile);
 

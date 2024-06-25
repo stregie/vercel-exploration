@@ -12,8 +12,9 @@
             <tr>
               <th>Path</th>
               <th>Size</th>
-              <th>Download</th>
+              <th colspan = "3">Download</th>
               <th>Delete</th>
+              <th>Metadata</th>
             </tr>
           </thead>
           <tbody id = "ch-B02-tbody">
@@ -25,13 +26,16 @@
           document.addEventListener("DOMContentLoaded", (event) => {
             ex01fetch();
             // document.querySelector('#ch-B02-table').classList.add("d-none");
-            document.querySelector('#ch-B02-ex01').classList.add("d-none");
-            document.querySelector('#ch-B02-ex02').classList.add("d-none");
-            document.querySelector('#ch-B02-ex03').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex01').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex02').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex03').classList.add("d-none");
             // document.querySelector('#ch-B02-ex04').classList.add("d-none");
+            // document.querySelector('#ch-B02-ex05').classList.add("d-none");
           });
         </script>
       </div>
+
+
 
       <div id = "ch-B02-ex01" class = "example row">
         <div>
@@ -55,13 +59,65 @@
         </script>
       </div>
 
+
+
       <div id = "ch-B02-ex02" class = "example row">
         <div>
-          <h3><b>Example 02:</b> Server upload - local file</h3>
+          <h3><b>Example 02:</b> Get metadata</h3>
+          <p>The <a href = "https://vercel.com/docs/storage/vercel-blob/using-blob-sdk#head">head()</a> method provides the metadata of a single file from its url.</p>
+        </div>
+      </div>
+
+
+      <div id = "ch-B02-ex03" class = "example row">
+        <div>
+          <h3><b>Example 03:</b> Downloading a file</h3>
+          <p>There are multiple approaches to download a file from Vercel Blob storage:</p>
+          <ol>
+            <li><b>Direct download:</b> Vercel provides a downloadUrl for each blob, however it does not let you rename the file. Moreover, if the contentDisposition is set to inline (see blob metadata), the filename also contains the random suffix added to the filename. For contentDisposition: attachment, the filename is the original filename. <u>Found at:</u> path column.</li>
+            <li><b>Anchor with download attribute:</b> <a href = "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download">Anchor elements</a> have a download attribute, which makes it possible to set the name of the file. However, it only works for same-origin URLs (which is not our case), moreover if the Content-Disposition header  specifies a filename, it takes priority over a filename specified in the download attribute</li>
+            <li><b>Fetch as blob </b> then create an ObjectUrl <a href = "https://blogs.backlinkworks.com/beginners-guide-to-downloading-files-with-javascript/#basic-download">source</a>. Works well, but slow, as the browser downloads the file first, then initiates the download for the user</li>
+            <li><b>Server-side proxy: </b> Creates an endpoint to fetch the file from the storage service with <a href = "https://www.npmjs.com/package/node-fetch">node-fetch</a> and set the Content-Disposition header to specify the desired filename. Then the file is streamed directly to the client, preserving the download speed. Provided by ChatGPT</li>
+          </ol>
+        </div>
+
+        <script>
+          async function ex03fetch1(downloadUrl){
+            const response = await fetch(downloadUrl);
+            const blob = await response.blob();
+            console.log(blob);
+            const newUrl = URL.createObjectURL(blob);
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = newUrl;
+            downloadLink.download = "test.txt";
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+          };
+        </script>
+      </div>
+
+
+
+      <div id = "ch-B02-ex04" class = "example row">
+        <div>
+          <h3><b>Example 04:</b> Delete file</h3>
+          <p>Deleting a file requires its url (which is contained in the file's metadata). To check if a the URL is valid and the file exists, the <code>head(url)</code> method is used. If it's invalid, it throws the following error: <b>BlobNotFoundError: Vercel Blob: The requested blob does not exist</b> and the <code>catch(error)</code> block is executed. If the file exists, it is deleted with the <code>del(url)</code> method.</p>
+          <p>Although <code>error.name</code> should return <b>"BlobNotFoundError"</b>, it only returns <b>Error</b>. Therefore, instead of it, the <code>error.message</code> part is used to identify the error.</p> 
+        </div>
+      </div>
+
+
+
+      <div id = "ch-B02-ex05" class = "example row">
+        <div>
+          <h3><b>Example 05:</b> Server upload - local file</h3>
           <p>Read a file that's already hosted on the Express server with <code>fs.readFile</code> and upload it to Vercel Blob with the <code>put(path, body, options)</code> method. With the <code>multipart: true</code> option, the upload of large files should be more stable.</p>
           <p>For Vercel blob, the path should not start with a "/" symbol. The correct format is: <code>Blob-test/Jointer.jpg</code> </p>
           
-          <select id = "ch-b03-ex02-select">
+          <select id = "ch-B03-ex05-select">
             <option value = "Chisel.txt">Chisel.txt</option>
             <option value = "jointer.jpg">jointer.jpg</option>
             <option value = "Jointer.txt">Jointer.txt</option>
@@ -74,12 +130,12 @@
 
           <button type = "button" class = "button-A button-medium" onclick = "ex02upload()">Upload</button>
           <p>Server response:</p>
-          <pre id = "ch-B02-ex02-result"></pre>
+          <pre id = "ch-B02-ex05-result"></pre>
         </div>
 
         <script>
-          async function ex02upload(){
-            const fileName = document.querySelector('#ch-b03-ex02-select').value;
+          async function ex05upload(){
+            const fileName = document.querySelector('#ch-B03-ex05-select').value;
             try {
               const response = await fetch(`/B02-blob/upload-local-file?filename=${fileName}`, {
                 method: "PUT",
@@ -87,9 +143,9 @@
               });
               const result = await response.json();
               alert(`${result.pathname} uploaded`);
-              document.querySelector('#ch-B02-ex02-result').textContent = JSON.stringify(result, null, 2);
+              document.querySelector('#ch-B02-ex05-result').textContent = JSON.stringify(result, null, 2);
             } catch (error) {
-              document.querySelector('#ch-B02-ex02-result').textContent = error;
+              document.querySelector('#ch-B02-ex05-result').textContent = error;
             } finally {
               ex01fetch();
             }
@@ -99,32 +155,27 @@
 
 
 
-      <div id = "ch-B02-ex03" class = "example row">
+      
+
+
+
+      <div id = "ch-B02-ex06" class = "example row">
         <div>
-          <h3><b>Example 03:</b> Delete file</h3>
-          <p>Deleting a file requires its url (which is contained in the file's metadata). To check if a the URL is valid and the file exists, the <code>head(url)</code> method is used. If it's invalid, it throws the following error: <b>BlobNotFoundError: Vercel Blob: The requested blob does not exist</b> and the <code>catch(error)</code> block is executed. If the file exists, it is deleted with the <code>del(url)</code> method.</p>
-          <p>Although <code>error.name</code> should return <b>"BlobNotFoundError"</b>, it only returns <b>Error</b>. Therefore, instead of it, the <code>error.message</code> part is used to identify the error.</p> 
-        </div>
-      </div>
-
-
-
-      <div id = "ch-B02-ex04" class = "example row">
-        <div>
-          <h3><b>Example 04:</b> Server upload - from browser</h3>
-          <p>Description.</p>
+          <h3><b>Example 06:</b> Server upload - from browser</h3>
+          <p>The selected file is sent in a FormData object with a PUT request. The server parses the incoming form with Formidable. Then, the files are sent to the Vercel Blob storage.</p>
+          <p>Although Formidable uses callback functions (which is difficult to combine with Vercel's promise approach) the <code>const [fields, files] = await form.parse(req);</code> returns a promise, and can be used in async / await syntax. One other possibility would have been to promisify the callback functions, however it felt like a messy workaround.</p>
+          <p>Vercel does not accept requests larger than 4,5 MB.</p>
         </div>
 
         <div>
-          <button type = "button" class = "button-A button-medium" onclick = "ex04upload()">Upload</button>
-          <input id = "ch-B02-ex04-input" type = "file" multiple = "true">
-          <p>Server response: <span id = "ch-B02-ex04-result"></span></p>
+          <button type = "button" class = "button-A button-medium" onclick = "ex06upload()">Upload</button>
+          <input id = "ch-B02-ex06-input" type = "file" multiple = "true">
+          <p>Server response: <span id = "ch-B02-ex06-result"></span></p>
         </div>
 
         <script>
-          async function ex04upload(){
-            console.log("ex04upload starts");
-            let fileInputFiles = document.querySelector('#ch-B02-ex04-input').files;
+          async function ex06upload(){
+            let fileInputFiles = document.querySelector('#ch-B02-ex06-input').files;
             let formData = new FormData();
             for (let i = 0; i < fileInputFiles.length; i++) {
               formData.append('file', fileInputFiles[i]);          
@@ -136,15 +187,17 @@
                 body: formData,
               });
               const result = await response.text();
-              document.querySelector('#ch-B02-ex04-result').textContent = result;
+              document.querySelector('#ch-B02-ex06-result').textContent = result;
             } catch (error) {          
-              document.querySelector('#ch-B02-ex04-result').textContent = error;
+              document.querySelector('#ch-B02-ex06-result').textContent = error;
             } finally {
               ex01fetch();
             }
           }
         </script>
       </div>
+
+
 
     </div>
 
@@ -153,13 +206,25 @@
         let html = "";
         fileList.forEach(item => {
           html += `<tr>
-            <td>${item.pathname}</td>
+            <td><a href = '${item.downloadUrl}'>${item.pathname}</a></td>
             <td>${item.size}</td>
-            <td><a href = '${item.downloadUrl}'>Download</a></td>
+            <td><a href = '${item.downloadUrl}' download = "newfilename.002">2</a></td>
+            <td><button class = "button-A button-small" onclick = "ex03fetch1('${item.downloadUrl}')">3</button></td>
+            <td><a href = "/B02-blob/download-file2?url=${item.url}">4</a></td>
+            </td>
             <td><button class = "button-A button-small" onclick = "deleteFile('${item.url}')">delete</button></td>
+            <td><button class = "button-A button-small" onclick = "getMetaData('${item.url}')">meta</button></td>
           </tr>`;
         });
         document.querySelector('#ch-B02-tbody').innerHTML = html;
+      };
+
+      async function getMetaData(url){
+        const response = await fetch(`/B02-blob/metadata/?url=${url}`, {
+          method: 'GET'
+        });
+        const blobMetaData = await response.json();
+        console.log(blobMetaData);
       };
 
       async function deleteFile(url){

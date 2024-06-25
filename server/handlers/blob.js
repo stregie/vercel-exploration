@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import { open, readFile } from 'node:fs/promises';
 import formidable from 'formidable';
 import { del, head, list, put } from '@vercel/blob';
+import fetch from 'node-fetch';
 
 // export const config = {
 //   runtime: 'edge',
@@ -14,6 +15,33 @@ const __dirname = path.dirname(__filename);
 export const getFileList = async (req, res) => {
   const { blobs } = await list();
   res.json(blobs);
+};
+
+export const getMetaData = async (req, res) => {
+  const blobUrl = req.query.url;
+
+  try {
+    const blobMetaData = await head(blobUrl);
+    console.log(blobMetaData);
+    res.json(blobMetaData);
+  } catch (error) {
+    console.log(error);
+    res.json({ message: "Error" });
+  }
+};
+
+export const downloadFile = async (req, res) => {
+  const downloadUrl = req.query.url;
+  const newFilename = "newFileName.001";
+
+  try {
+    const response = await fetch(downloadUrl);
+    res.setHeader('Content-Disposition', `attachment; filename="${newFilename}"`);
+    response.body.pipe(res);
+  } catch (error) {
+    console.error('Error fetching file: ', error);
+    res.status(500).send('Error downloading file');
+  }
 };
 
 export const deleteFile = async (req, res) => {
@@ -35,8 +63,9 @@ export const deleteFile = async (req, res) => {
 
 export const uploadLocalFile = async (req, res) => {
   const fileName = req.query.filename;
+  const filePath = path.join(__dirname, '..', 'assets', 'files-to-upload', fileName)
+
   try {
-    const filePath = path.join(__dirname, '..', 'assets', 'files-to-upload', fileName)
     const data = await readFile(filePath);
     const blob = await put(`Blob-test/${fileName}`, data, { 
       access: 'public',
@@ -76,3 +105,4 @@ export const uploadFile = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
